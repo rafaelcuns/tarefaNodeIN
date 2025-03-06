@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { atualizarUsuario, criarUsuario, deletarUsuario, listarUsuario, pegarUsuarios } from './controllers/usuarios'
-import { atualizarPost, criarPost, deletarPost, listarPost, pegarPosts } from "./controllers/posts";
+import { atualizarPost, criarPost, deletarPost, listarPost, listarPostUsuario, pegarPosts } from "./controllers/posts";
 
 export function appRoutes(app: FastifyInstance) {
     app.post('/usuarios', criarUsuario) // Password digest e e-mail igual
@@ -13,4 +13,5 @@ export function appRoutes(app: FastifyInstance) {
     app.patch('/posts/:id', atualizarPost)
     app.get('/usuarios/:id', listarUsuario)
     app.get('/posts/:id', listarPost)
+    app.get('/posts/usuario/:id', listarPostUsuario)
 }

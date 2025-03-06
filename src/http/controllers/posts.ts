@@ -69,3 +69,12 @@ export async function listarPost(request: FastifyRequest, reply: FastifyReply) {
     });
     reply.send(post);
 }
+
+export async function listarPostUsuario(request: FastifyRequest, reply: FastifyReply) {
+    const { id: idString } = z.object({id: z.string()}).parse(request.params)
+    const idUsuario = parseInt(idString, 10);
+
+    const posts = await prisma.$queryRaw`SELECT * FROM 'Post' WHERE "id_usuario" = ${idUsuario}`
+
+    return reply.status(200).send(posts)
+}
