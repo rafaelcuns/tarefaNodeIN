@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import {z} from "zod"
 import {prisma} from "@/src/lib/prisma"
+import { hash } from "bcryptjs"
 
 export async function criarUsuario(request: FastifyRequest, reply: FastifyReply) {
     const usuarioSchema = z.object({
@@ -21,11 +22,12 @@ export async function criarUsuario(request: FastifyRequest, reply: FastifyReply)
         return reply.send(409).send('E-mail já cadastrado')
     }
 
+    const senhaCriptografada = await hash(senha, 6)
     const usuarioCriado = await prisma.usuario.create({
         data: {
             nome,
             email,
-            senha,
+            senha: senhaCriptografada,
             foto
         }
     })
