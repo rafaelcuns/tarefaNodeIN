@@ -12,7 +12,16 @@ export async function criarUsuario(request: FastifyRequest, reply: FastifyReply)
 
     const { nome, email, senha, foto } = usuarioSchema.parse(request.body)
 
-    await prisma.usuario.create({
+    const mesmoEmailDeUsuario = await prisma.usuario.findUnique({
+        where: {
+            email
+        }
+    })
+    if (mesmoEmailDeUsuario) {
+        return reply.send(409).send('E-mail já cadastrado')
+    }
+
+    const usuarioCriado = await prisma.usuario.create({
         data: {
             nome,
             email,
@@ -20,8 +29,10 @@ export async function criarUsuario(request: FastifyRequest, reply: FastifyReply)
             foto
         }
     })
-
-    return reply.status(201).send("Usuário criado")
+    if (usuarioCriado) {
+        return reply.status(201).send("Usuário criado")
+    }
+    
 }
 
 export async function pegarUsuarios(request: FastifyRequest, reply: FastifyReply) {
